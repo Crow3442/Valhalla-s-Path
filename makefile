@@ -2,8 +2,8 @@
 
 .PHONY: help start run test install clean format lint quality
 
-PYTHON = python
-PIP = pip
+PYTHON = py
+PIP = py -m pip
 
 help:
 	@echo "Comandos disponíveis:"
