@@ -9,6 +9,7 @@ help:
 	@echo "Comandos disponíveis:"
 	@echo "  make install"
 	@echo "  make start"
+	@echo "  make run"
 	@echo "  make test"
 	@echo "  make lint"
 	@echo "  make format"
@@ -21,16 +22,16 @@ run:
 start: run
 
 test:
-	pytest
+	$(PYTHON) -m pytest
 
 install:
 	$(PIP) install -r requirements.txt
 
 format:
-	black .
+	$(PYTHON) -m black .
 
 lint:
-	ruff check .
+	$(PYTHON) -m ruff check .
 
 quality: lint test
 
