@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# Pytest
+.pytest_cache/
+
+# Ambientes virtuais
+.venv/
+venv/
+
+# Dados gerados pelo jogo
+data/recorde.txt
