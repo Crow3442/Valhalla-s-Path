@@ -1,5 +1,3 @@
-import random
-
 import pygame
 
 from src.config import (
@@ -13,9 +11,6 @@ from src.config import (
     VIDAS_INICIAIS,
     VELOCIDADE_JOGADOR,
     PONTOS_POR_ITEM,
-    VELOCIDADE_QUEDA_INICIAL,
-    AUMENTO_VELOCIDADE,
-    INTERVALO_DIFICULDADE,
     PONTUACAO_VITORIA,
 )
 
@@ -25,24 +20,16 @@ from src.funcoes import (
     limitar_valor,
     verificar_colisao,
     tomar_dano,
+    reposicionar_no_topo,
+    calcular_velocidade_queda,
 )
+
 from src.sprites import pegar_sprite
+
 from src.dados import (
     salvar_recorde,
     carregar_recorde,
 )
-
-
-def reposicionar_no_topo(elemento):
-    """Reposiciona um elemento acima da tela, em uma posição horizontal aleatória."""
-    elemento["rect"].x = random.randint(0, LARGURA_TELA - elemento["rect"].width)
-    elemento["rect"].y = random.randint(-150, -50)
-
-
-def calcular_velocidade_queda(pontos):
-    """Calcula a velocidade de queda com base na pontuação atual."""
-    aumento = pontos // INTERVALO_DIFICULDADE
-    return VELOCIDADE_QUEDA_INICIAL + (aumento * AUMENTO_VELOCIDADE)
 
 
 def executar_jogo():
