@@ -12,6 +12,8 @@ from src.config import (
     VELOCIDADE_JOGADOR,
     PONTOS_POR_ITEM,
     PONTUACAO_VITORIA,
+    QUANTIDADE_ITENS,
+    QUANTIDADE_OBSTACULOS,
 )
 
 from src.funcoes import (
@@ -51,18 +53,24 @@ def executar_jogo():
         "rect": player_image.get_rect(midbottom=(LARGURA_TELA // 2, ALTURA_TELA - 20)),
     }
 
-    item = {
-        "imagem": item_image,
-        "rect": item_image.get_rect(),
-    }
+    itens = []
+    obstaculos = []
 
-    obstaculo = {
-        "imagem": obstaculo_image,
-        "rect": obstaculo_image.get_rect(),
-    }
+    for _ in range(QUANTIDADE_ITENS):
+        item = {
+            "imagem": item_image,
+            "rect": item_image.get_rect(),
+        }
+        reposicionar_no_topo(item)
+        itens.append(item)
 
-    reposicionar_no_topo(item)
-    reposicionar_no_topo(obstaculo)
+    for _ in range(QUANTIDADE_OBSTACULOS):
+        obstaculo = {
+            "imagem": obstaculo_image,
+            "rect": obstaculo_image.get_rect(),
+        }
+        reposicionar_no_topo(obstaculo)
+        obstaculos.append(obstaculo)
 
     pontos = 0
     vidas = VIDAS_INICIAIS
@@ -92,22 +100,25 @@ def executar_jogo():
 
         velocidade_queda = calcular_velocidade_queda(pontos)
 
-        item["rect"].y += velocidade_queda
-        obstaculo["rect"].y += velocidade_queda
+        for item in itens:
+            item["rect"].y += velocidade_queda
 
-        if item["rect"].top > ALTURA_TELA:
-            reposicionar_no_topo(item)
+            if item["rect"].top > ALTURA_TELA:
+                reposicionar_no_topo(item)
 
-        if obstaculo["rect"].top > ALTURA_TELA:
-            reposicionar_no_topo(obstaculo)
+            if verificar_colisao(jogador["rect"], item["rect"]):
+                pontos = calcular_pontos(pontos, PONTOS_POR_ITEM)
+                reposicionar_no_topo(item)
 
-        if verificar_colisao(jogador["rect"], item["rect"]):
-            pontos = calcular_pontos(pontos, PONTOS_POR_ITEM)
-            reposicionar_no_topo(item)
+        for obstaculo in obstaculos:
+            obstaculo["rect"].y += velocidade_queda
 
-        if verificar_colisao(jogador["rect"], obstaculo["rect"]):
-            vidas = tomar_dano(vidas, 1)
-            reposicionar_no_topo(obstaculo)
+            if obstaculo["rect"].top > ALTURA_TELA:
+                reposicionar_no_topo(obstaculo)
+
+            if verificar_colisao(jogador["rect"], obstaculo["rect"]):
+                vidas = tomar_dano(vidas, 1)
+                reposicionar_no_topo(obstaculo)
 
         if pontos > recorde:
             recorde = pontos
@@ -121,8 +132,13 @@ def executar_jogo():
         )
 
         tela.fill(CINZA)
-        tela.blit(item["imagem"], item["rect"])
-        tela.blit(obstaculo["imagem"], obstaculo["rect"])
+
+        for item in itens:
+            tela.blit(item["imagem"], item["rect"])
+
+        for obstaculo in obstaculos:
+            tela.blit(obstaculo["imagem"], obstaculo["rect"])
+
         tela.blit(jogador["imagem"], jogador["rect"])
 
         pygame.display.flip()
